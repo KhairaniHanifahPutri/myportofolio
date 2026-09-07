@@ -176,6 +176,27 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
+.hero-header{
+    text-transform: uppercase;
+}
+
+.meta-exp-list {
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.meta-exp-row dd {
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.15rem;
+}
+
+.meta-exp-row dt {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
 @media (max-width: 600px) {
     .hero-grid {
         grid-template-columns: 1fr;
