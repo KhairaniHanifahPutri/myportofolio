@@ -1,32 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+{% block meta %}
     <title>Awards - {{ name }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <header class="site-header">
-        <div class="container">
-            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
-            <nav>
-                <a href="{% url 'main:show_main' %}">Profile</a>
-                <a href="{% url 'main:show_experience' %}">Experience</a>
-                <a href="{% url 'main:show_awards' %}">Awards</a>
-            </nav>
-        </div>
-    </header>
-
+{% endblock meta %}
+{% block content %}
     <main>
         <section class="awards-section" id="awards">
             <div class="container">
                 <p class="section-kicker">Penghargaan saya sejauh ini</p>
-                <h1>Awards</h1>
-
+                <div class="award-header">
+                    <h1>Awards</h1>
+                    <a href="{% url 'main:create_award' %}"
+                       class="button award-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Penghargaan
+                    </a>
+                </div>
+                <form method="get"
+                      action="{% url 'main:show_awards' %}"
+                      class="award-search">
+                    <input type="search"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Cari berdasarkan nama penghargaan"
+                           class="award-search__input"
+                           aria-label="Cari berdasarkan nama penghargaan">
+                    <button type="submit" class="button">Cari</button>
+                </form>
                 <div class="awards-grid">
                     {% for awards in awards_list %}
                         <article class="awards-card">
@@ -42,19 +41,14 @@
                             </p>
                         </article>
                     {% empty %}
-                        <p class="empty-state">
-                            Belum ada penghargaan yang ditambahkan.
-                        </p>
+                        {%  if title_query %}
+                            <p class="empty-state">Tidak ada proyek dengan nama tersebut.</p>
+                        {% else %}
+                            <p class="empty-state">Belum ada penghargaan yang ditambahkan.</p>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
         </section>
     </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
-        </div>
-    </footer>
-</body>
-</html>
+{% endblock content %}

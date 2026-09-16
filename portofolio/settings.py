@@ -156,3 +156,6 @@ MAILERS = {
     },
 }
 
+# gunakan https:// untuk trailing urlnya
+CSRF_TRUSTED_ORIGINS = ["https://khairani-hanifah-myportofolio.pws.cs.ui.ac.id/"]
+
