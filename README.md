@@ -17,3 +17,10 @@ Pada tugas 1, saya tidak menggunakan AI dalam membuat kode html maupun css. Saya
 3. Sepemahaman saya, makemigrations untuk menyimpan penambahan/perubahan model, lalu migrate untuk menyesuaikan penambahan tersebut ke django. Contoh penambahan sudah ada di nomor 1. Contoh perubahan model yang perlu melakukan dua perintah tersebut adalah ketika ingin mengubah field pada modelnya. Ini terjadi saat saya ingin menambahkan tanggal pada halaman baru. Ternyata format field yang saya tulis itu mengambil tanggal saat ini data ditambahkan, bukan yang saya atur. Lalu saya menyesuaikan fieldnya. Setelah dicoba ternyata saya perlu melakukan makemigrations dan migrate lagi. 
 Saya menggunakan AI (ChatGPT) untuk mencari error dari output css saya yang tidak konsisten. Namun, setelah saya menyalakan ulang laptop saya, output sudah sama. Berikut adalah link terkait prompting saya. 
 https://chatgpt.com/share/6aa7ed83-f1f8-83ec-8964-d098ef8b6688
+
+### Tugas 3
+1. Karena kalau buat manual tidak efektif. Selain itu, data juga dapat berubah seiring berjalannya waktu. Hal ini membuat kita lebih susah mengubah data jika form dibuat manual dibandingkan dengan ModelForm. Lalu untuk {% csrf_token %}, sepemahaman saya itu berfungsi untuk melindungi data di Django.
+2. Sepemahaman saya, karena JSON lebih mudah dipahami dan lebih mudah untuk di generate oleh mesin. JSON juga unggul dalam hal parser yang cepat dan ukurannya lebih ringkas.
+3. Kurang lebih ini yang saya pahami. Pertama kita membuat request, lalu disampaikan ke Django. Model yang sesuai akan diambil dan dilakukan serialization karena data belum berupa JSON. Jadi proses serialization dilakukan untuk mengubah data menjadi bentuk JSON sebelum dikembalikan atau ditampilkan.
+Saya menggunakan AI (ChatGPT) untuk membantu saya memperbaiki hasil dari Tutorial 3 saya. Saya tidak sadar ternyata Tutorial 3 saya belum sepenuhnya bekerja, sehingga saya meminta bantuan AI untuk mencari apa masalahnya. Berikut adalah link prompting saya.
+https://chatgpt.com/share/6ab14050-d890-83ec-b19a-133c1cb48687

@@ -277,7 +277,8 @@ h1, .brand {
     font-weight: 600;
 }
 
-.award-form {
+.award-form,
+.experience-form {
     width: 100%;
     max-width: 100%;
     margin-top: 1.5rem;
@@ -336,7 +337,8 @@ h1, .brand {
     background: var(--ink);
 }
 
-.award-header {
+.award-header,
+.experience-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -345,24 +347,28 @@ h1, .brand {
     margin-bottom: 1.5rem;
 }
 
-.award-add-button {
+.award-add-button,
+.experience-add-button {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
 }
 
-.award-add-button span {
+.award-add-button span,
+.experience-add-button span {
     font-size: 1.25rem;
     line-height: 1;
 }
 
-.award-search {
+.award-search,
+.experience-search {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
-.award-search__input {
+.award-search__input,
+.experience-search__input {
     width: 100%;
     min-width: 0;
     padding: 0.7rem;
@@ -373,12 +379,14 @@ h1, .brand {
     font: inherit;
 }
 
-.award-search__input:focus {
+.award-search__input:focus,
+.experience-search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
 
-.award-actions {
+.award-actions,
+.experience-actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -386,12 +394,14 @@ h1, .brand {
     margin-top: 1rem;
 }
 
-.award-actions .button {
+.award-actions .button,
+.experience-actions .button {
     font-size: 0.85rem;
     font-weight: 600;
 }
 
-.award-card-actions {
+.award-card-actions,
+.experience-card-actions {
     display: flex;
     flex-direction: column;
     margin-top: auto;
@@ -401,11 +411,13 @@ h1, .brand {
     display: none !important;
 }
 
-.award-actions .experience-status {
+.award-actions .experience-status,
+.experience-actions .experience-status {
     margin-top: 0;
 }
 
-.award-delete-modal {
+.award-delete-modal,
+.experience-delete-modal {
     display: none;
     position: fixed;
     inset: 0;
@@ -422,11 +434,13 @@ h1, .brand {
     justify-content: center;
 }
 
-.award-delete-modal:popover-open {
+.award-delete-modal:popover-open,
+.experience-delete-modal:popover-open {
     display: flex;
 }
 
-.award-delete-modal__backdrop {
+.award-delete-modal__backdrop,
+.experience-delete-modal__backdrop {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -437,7 +451,8 @@ h1, .brand {
     cursor: default;
 }
 
-.award-delete-modal__content {
+.award-delete-modal__content,
+.experience-delete-modal__content {
     position: relative;
     z-index: 1;
     width: min(100%, 480px);
@@ -448,7 +463,8 @@ h1, .brand {
     box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
 }
 
-.award-delete-modal__content h2 {
+.award-delete-modal__content h2,
+.experience-delete-modal__content h2 {
     margin: 0 0 0.75rem;
     font-family:
         "Space Grotesk",
@@ -457,7 +473,8 @@ h1, .brand {
     font-size: 1.5rem;
 }
 
-.award-delete-modal__close {
+.award-delete-modal__close,
+.experience-delete-modal__close {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -470,7 +487,8 @@ h1, .brand {
     cursor: pointer;
 }
 
-.award-delete-modal__actions {
+.award-delete-modal__actions,
+.experience-delete-modal__actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
