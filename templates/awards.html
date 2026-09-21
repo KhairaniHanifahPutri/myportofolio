@@ -27,18 +27,23 @@
                     <button type="submit" class="button">Cari</button>
                 </form>
                 <div class="awards-grid">
-                    {% for awards in awards_list %}
+                    {% for award in awards_list %}
                         <article class="awards-card">
                             <span class="awards-category">
-                                {{ awards.get_category_display }}
+                                {{ award.get_category_display }}
                             </span>
-                            <h2>{{ awards.title }}</h2>
+                            <h2>{{ award.title }}</h2>
                             <p class="awards-description">
-                                {{ awards.description }}
+                                {{ award.description }}
                             </p>
                             <p class="awards-time">
-                                {{ awards.awarded_at }}
+                                {{ award.awarded_at }}
                             </p>
+                            <div class="award-card-actions">
+                                <div class="award-actions">
+                                    {% include "components/award_delete_modal.html" with award=award %}
+                                </div>
+                            </div>
                         </article>
                     {% empty %}
                         {%  if title_query %}

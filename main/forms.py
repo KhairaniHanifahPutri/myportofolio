@@ -1,6 +1,6 @@
 from django.forms import ModelForm, TextInput, Textarea, URLInput
 
-from main.models import Awards
+from main.models import Awards, Experience
 
 class AwardsForm(ModelForm):
     class Meta:
@@ -33,6 +33,42 @@ class AwardsForm(ModelForm):
             'awarded_at': TextInput(
                 attrs={
                     "placeholder": 'Masukkan tanggal diperoleh (format: YYYY-MM-DD)',
+                }
+            ),
+        }
+
+
+class ExperienceForm(ModelForm):
+    class Meta:
+        model = Experience
+        fields = ['title', 'description', 'category', 'thumbnail']
+
+        labels = {
+            "title": "Nama Pengalaman",
+            "description": "Deskripsi Pengalaman",
+            "category": "Kategori Pengalaman",
+            "thumbnail": "URL Thumbnail",
+        }
+
+        widgets = {
+            'title': TextInput(
+                attrs={
+                    "placeholder": 'Masukkan nama pengalaman',
+                }
+            ),
+            'description': Textarea(
+                attrs={
+                    "placeholder": 'Masukkan deskripsi pengalaman',
+                }
+            ),
+            'category': TextInput(
+                attrs={
+                    "placeholder": 'Masukkan kategori pengalaman',
+                }
+            ),
+            'thumbnail': URLInput(
+                attrs={
+                    "placeholder": 'Masukkan URL thumbnail (opsional)',
                 }
             ),
         }
