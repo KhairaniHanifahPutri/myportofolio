@@ -1,13 +1,19 @@
 from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required  # Tambahkan baris ini
+from django.core.exceptions import PermissionDenied        # Tambahkan baris ini
 
 from main.forms import AwardsForm, ExperienceForm
 from main.models import Awards, Experience
+import datetime
 
 
 def show_main(request):
+    last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
     context = {
         "name": "Khairani Hanifah Putri",
         "npm": "2506587371",
@@ -17,11 +23,30 @@ def show_main(request):
             "I am a passionate learner that lately focused on learning data visualization as a hobby. "
             "Still, I always look for a chance to improve my skills especially in communication and IT skills."
         ),
+        "last_login": last_login,
     }
     return render(request, "index.html", context)
 
 
+def register(request):
+    form = UserCreationForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Akun berhasil dibuat. Silakan login.")
+        return redirect("main:login")
+
+    context = {
+        "name": "Khairani Hanifah Putri",
+        "form": form,
+    }
+    return render(request, "register.html", context)
+
+@login_required(login_url="/login/")
 def create_award(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     form = AwardsForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -64,8 +89,11 @@ def show_awards(request):
     }
     return render(request, "awards.html", context)
 
-
+@login_required(login_url="/login/")
 def delete_award(request, award_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     award = get_object_or_404(Awards, pk=award_id)
 
     if request.method == "POST":
@@ -75,8 +103,11 @@ def delete_award(request, award_id):
 
     return redirect("main:show_awards")
 
-
+@login_required(login_url="/login/")
 def create_experience(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     form = ExperienceForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -92,35 +123,41 @@ def create_experience(request):
 
 
 def get_experience_json(request):
+
     title_query = request.GET.get("title", "").strip()
-    experiences = Experience.objects.all()
+    experience = Experience.objects.all()
 
     if title_query:
-        experiences = experiences.filter(title__icontains=title_query)
+        experience = experience.filter(title__icontains=title_query)
 
-    experiences_json = serializers.serialize("json", experiences)
-    return HttpResponse(experiences_json, content_type="application/json")
+    experience_json = serializers.serialize(
+        "json", experience, use_natural_foreign_keys=True
+        )
+    return HttpResponse(experience_json, content_type="application/json")
 
 
 def show_experience(request):
     json_response = get_experience_json(request)
 
-    experiences = serializers.deserialize(
+    experience = serializers.deserialize(
         "json",
         json_response.content.decode("utf-8"),
     )
-    experiences = [experience.object for experience in experiences]
+    experience = [experience.object for experience in experience]
     title_query = request.GET.get("title", "").strip()
 
     context = {
         "name": "Khairani Hanifah Putri",
-        "experiences_list": experiences,
+        "experience_list": experience,
         "title_query": title_query,
     }
     return render(request, "experience.html", context)
 
-
+@login_required(login_url="/login/")
 def delete_experience(request, experience_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
@@ -129,3 +166,56 @@ def delete_experience(request, experience_id):
         return redirect("main:show_experience")
 
     return redirect("main:show_experience")
+
+
+def login_user(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        user = form.get_user()
+        login(request, user)
+        response = redirect("main:show_main")
+        response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        return response
+
+    context = {
+        "name": "Khairani Hanifah Putri",
+        "form": form,
+    }
+    return render(request, "login.html", context)
+
+
+def logout_user(request):
+    logout(request)
+    response = redirect("main:show_main")
+    response.delete_cookie('last_login')
+    return response
+
+
+@login_required(login_url="/login/")
+def toggle_star(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in experience.starred_by.all():
+            experience.starred_by.remove(request.user)
+        else:
+            experience.starred_by.add(request.user)
+
+    return redirect("main:show_experience")
+
+
+def toggle_star(request, awards_id):
+    awards = get_object_or_404(Awards, pk=awards_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in awards.starred_by.all():
+            awards.starred_by.remove(request.user)
+        else:
+            awards.starred_by.add(request.user)
+
+    return redirect("main:show_awards")

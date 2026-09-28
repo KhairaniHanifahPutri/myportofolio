@@ -8,11 +8,13 @@
             <div class="container">
                 <p class="section-kicker">Perjalanan saya sejauh ini</p>
                 <h1>Experience</h1>
-                <a href="{% url 'main:create_experience' %}"
-                    class="button experience-add-button">
-                    <span aria-hidden="true">+</span>
-                    Tambah Pengalaman
-                </a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'main:create_experience' %}"
+                        class="button experience-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Pengalaman
+                    </a>
+                {% endif %}
                 <form method="get"
                       action="{% url 'main:show_experience' %}"
                       class="experience-search">
@@ -40,7 +42,10 @@
                                     {% if experience.experience_url %}
                                         <a href="{{ experience.experience_url }}" class="button">Lihat Pengalaman</a>
                                     {% endif %}
-                                    {% include "components/experience_delete_modal.html" with experience=experience %}
+                                    {% include "components/experience_star.html" with experience=experience %}
+                                    {% if user.is_superuser %}
+                                        {% include "components/experience_delete_modal.html" with experience=experience %}
+                                    {% endif %}
                                 </div>
                             </div>
                             {% if experience.is_ongoing %}
