@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required  # Tambahkan baris ini
 from django.core.exceptions import PermissionDenied        # Tambahkan baris ini
 
+from django.views.decorators.http import require_POST
 from main.forms import AwardsForm, ExperienceForm
 from main.models import Awards, Experience
 import datetime
@@ -68,24 +69,34 @@ def get_awards_json(request):
     if title_query:
         awards = awards.filter(title__icontains=title_query)
 
-    awards_json = serializers.serialize("json", awards)
-    return HttpResponse(awards_json, content_type="application/json")
+    data = []
+    for award in awards:
+        starred_users = award.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(award.id),
+            "fields": {
+                "title": award.title,
+                "description": award.description,
+                "tech_stack": award.tech_stack,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 
 def show_awards(request):
-    json_response = get_awards_json(request)
-
-    awards = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    awards = [award.object for award in awards]
     title_query = request.GET.get("title", "").strip()
 
     context = {
         "name": "Khairani Hanifah Putri",
-        "awards_list": awards,
         "title_query": title_query,
+        "form": AwardsForm(),
     }
     return render(request, "awards.html", context)
 
@@ -219,3 +230,23 @@ def toggle_star(request, awards_id):
             awards.starred_by.add(request.user)
 
     return redirect("main:show_awards")
+
+
+@require_POST
+def create_award_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan penghargaan."},
+            status=403,
+        )
+
+    form = AwardsForm(request.POST)
+    if form.is_valid():
+        award = form.save()
+        return JsonResponse(
+            {"message": "Penghargaan berhasil ditambahkan.", "pk": str(award.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
