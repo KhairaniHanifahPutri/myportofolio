@@ -3,6 +3,7 @@ from django.urls import path
 from main.views import (
     create_award_ajax,
     create_experience,
+    create_experience_ajax,
     delete_experience,
     get_awards_json,
     delete_award,
@@ -42,4 +43,5 @@ urlpatterns = [
         name="toggle_star",
     ),
     path("awards/add-ajax/", create_award_ajax, name="create_award_ajax"),
+    path("experience/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
 ]
