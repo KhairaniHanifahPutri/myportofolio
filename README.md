@@ -24,3 +24,10 @@ https://chatgpt.com/share/6aa7ed83-f1f8-83ec-8964-d098ef8b6688
 3. Kurang lebih ini yang saya pahami. Pertama kita membuat request, lalu disampaikan ke Django. Model yang sesuai akan diambil dan dilakukan serialization karena data belum berupa JSON. Jadi proses serialization dilakukan untuk mengubah data menjadi bentuk JSON sebelum dikembalikan atau ditampilkan.
 Saya menggunakan AI (ChatGPT) untuk membantu saya memperbaiki hasil dari Tutorial 3 saya. Saya tidak sadar ternyata Tutorial 3 saya belum sepenuhnya bekerja, sehingga saya meminta bantuan AI untuk mencari apa masalahnya. Berikut adalah link prompting saya.
 https://chatgpt.com/share/6ab14050-d890-83ec-b19a-133c1cb48687
+
+### Tugas 5
+1. Debouncing itu menunda eksekusi suatu fungsi sampai pengguna berhenti melakukan suatu aktivitas. Diterapkan untuk mengurangi beban server, menghemat penggunaan jaringan, dan membuat pencarian menjadi lebih efisien.
+2. Await untuk menunggu hasil dari fetch() selesai sebelum kode berikutnya dijalankan. Kalau tidak ada await hasilnya tidak sesuai karena requestnya belum selesai.
+3. XSS itu ketika ada penyerang berhasil memasukkan kode JavaScript ke web sehingga kode dijalankan di browser pengguna lain. Template Django masih lebih aman karena datanya masih bisa di-escape secara otomatis.
+Saya menggunakan AI untuk mencari tau alasan AJAX lebih rentan terkena XSS (pertanyaan nomor 3), berikut link prompt saya.
+https://chatgpt.com/share/6ac3a6ed-f150-83ec-b5f2-c0f78a442c1a
