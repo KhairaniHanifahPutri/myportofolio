@@ -80,7 +80,6 @@ def get_awards_json(request):
             "fields": {
                 "title": award.title,
                 "description": award.description,
-                "tech_stack": award.tech_stack,
                 "star_count": starred_users.count(),
                 "is_starred": is_starred,
                 "starred_by_names": starred_by_names,
@@ -152,7 +151,6 @@ def get_experience_json(request):
             "fields": {
                 "title": exp.title,
                 "description": exp.description,
-                "tech_stack": exp.tech_stack,
                 "star_count": starred_users.count(),
                 "is_starred": is_starred,
                 "starred_by_names": starred_by_names,
@@ -227,8 +225,8 @@ def toggle_star(request, experience_id):
     return redirect("main:show_experience")
 
 
-def toggle_star(request, awards_id):
-    awards = get_object_or_404(Awards, pk=awards_id)
+def toggle_star(request, award_id):
+    awards = get_object_or_404(Awards, pk=award_id)
 
     if request.method == "POST":
         # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
