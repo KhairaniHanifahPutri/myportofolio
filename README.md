@@ -31,3 +31,9 @@ https://chatgpt.com/share/6ab14050-d890-83ec-b19a-133c1cb48687
 3. XSS itu ketika ada penyerang berhasil memasukkan kode JavaScript ke web sehingga kode dijalankan di browser pengguna lain. Template Django masih lebih aman karena datanya masih bisa di-escape secara otomatis.
 Saya menggunakan AI untuk mencari tau alasan AJAX lebih rentan terkena XSS (pertanyaan nomor 3), berikut link prompt saya.
 https://chatgpt.com/share/6ac3a6ed-f150-83ec-b5f2-c0f78a442c1a
+
+### Tugas 6
+1. REST (Representational State Transfer) adalah gaya arsitektur untuk merancang web API. Beberapa fungsinya yaotu data diperlakukan sebagai resource, HTTP method menyatakan tindakan, serta klien dan server bertukar representasi data. Mengembalikan JSON saja belum cukup untuk menyebut sebuah API sebagai RESTful karena yang menentukan adalah cara API diatur. PUT/PATCH berfungsi untuk mengubah resource. PUT digunakan saat ingin mengganti keseluruhan data, sedangkan PATCH digunakan saat hanya ingin mengganti sebagian data.
+2. Peran serializer yaitu memvalidasi atau memeriksa input dengan is_valid() dan menyimpan data dengan save(). Keunggulannya dibanding manual adalah serializer dapat memeriksa data secara otomatis, dapat mempermudah proses GET, POST, juga dapat mengurangi redundansi kode.
+3. Autentikasi berfungsi untuk memvalidasi user atau untuk memastikan siapa user tersebut, sedangkan otorisasi lebih mengarah ke memberikan akses apa saja yang boleh dilakukan oleh user tersebut. Menurut saya, perlu diadakan pemeriksaan karena masalahnya bukan pada ada atau tidaknya tombol, tetapi pada akses atau kekuasaan yang diberikan.
+4. Proses SessionAuthentication dilakukan dengan menggunakan session yang ada pada cookie browser, sehingga tetap perlu CSRF token. force_authenticate tidak cukup untuk membuktikan perlindungan CSRF karena proses tersebut tidak melewati proses SessionAuthentication melainkan hanya melewati proses autentikasi biasa.

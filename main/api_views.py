@@ -7,13 +7,15 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from main.models import Awards
+from main.models import Awards, Experience
 from main.permissions import IsPortfolioOwnerOrReadOnly
-from main.serializers import AwardSerializer
+from main.permissions import IsPortfolioOwnerOrEditorOrReadOnly
+from main.serializers import AwardSerializer, ExperienceSerializer
 
 
 @api_view(["GET", "HEAD", "POST"])
 @authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def award_list(request):
     if request.method in ("GET", "HEAD"):
@@ -34,6 +36,7 @@ def award_list(request):
 
 @api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
 @authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def award_detail(request, award_id):
     award = get_object_or_404(
@@ -57,6 +60,7 @@ def award_detail(request, award_id):
 
 
 @api_view(["POST"])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def award_star(request, award_id):
@@ -66,4 +70,64 @@ def award_star(request, award_id):
     else:
         award.starred_by.add(request.user)
     serializer = AwardSerializer(award, context={"request": request})
+    return Response(serializer.data)
+
+
+@api_view(["GET", "HEAD", "POST"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+@permission_classes([IsPortfolioOwnerOrReadOnly])
+def experience_list(request):
+    if request.method in ("GET", "HEAD"):
+        experience = Experience.objects.prefetch_related("starred_by").order_by("title", "id")
+        title = request.query_params.get("title", "").strip()
+        if title:
+            experience = experience.filter(title__icontains=title)
+        serializer = ExperienceSerializer(
+            experience, many=True, context={"request": request},
+        )
+        return Response(serializer.data)
+
+    serializer = ExperienceSerializer(data=request.data, context={"request": request})
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+@permission_classes([IsPortfolioOwnerOrReadOnly])
+def experience_detail(request, experience_id):
+    experience = get_object_or_404(
+        Experience.objects.prefetch_related("starred_by"), pk=experience_id,
+    )
+    if request.method in ("GET", "HEAD"):
+        serializer = ExperienceSerializer(experience, context={"request": request})
+        return Response(serializer.data)
+
+    if request.method == "DELETE":
+        experience.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    serializer = ExperienceSerializer(
+        experience, data=request.data, partial=request.method == "PATCH",
+        context={"request": request},
+    )
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def experience_star(request, experience_id):
+    experience = get_object_or_404(Awards, pk=experience_id)
+    if experience.starred_by.filter(pk=request.user.pk).exists():
+        experience.starred_by.remove(request.user)
+    else:
+        experience.starred_by.add(request.user)
+    serializer = AwardSerializer(experience, context={"request": request})
     return Response(serializer.data)
