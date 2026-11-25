@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import (
     api_view, authentication_classes, permission_classes,
 )
@@ -14,7 +14,7 @@ from main.serializers import AwardSerializer, ExperienceSerializer
 
 
 @api_view(["GET", "HEAD", "POST"])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def award_list(request):
@@ -35,7 +35,7 @@ def award_list(request):
 
 
 @api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def award_detail(request, award_id):
@@ -61,7 +61,7 @@ def award_detail(request, award_id):
 
 @api_view(["POST"])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def award_star(request, award_id):
     award = get_object_or_404(Awards, pk=award_id)
@@ -74,7 +74,7 @@ def award_star(request, award_id):
 
 
 @api_view(["GET", "HEAD", "POST"])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def experience_list(request):
@@ -95,7 +95,7 @@ def experience_list(request):
 
 
 @api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def experience_detail(request, experience_id):
@@ -121,7 +121,7 @@ def experience_detail(request, experience_id):
 
 @api_view(["POST"])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def experience_star(request, experience_id):
     experience = get_object_or_404(Awards, pk=experience_id)
@@ -131,3 +131,11 @@ def experience_star(request, experience_id):
         experience.starred_by.add(request.user)
     serializer = AwardSerializer(experience, context={"request": request})
     return Response(serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def api_logout(request):
+    if request.auth is not None:
+        request.auth.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
